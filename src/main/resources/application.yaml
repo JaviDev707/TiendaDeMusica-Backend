@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: tiendaDeMusica
+
+  profiles:
+    active: local
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  web:
+    error:
+      include-message: always
+      include-binding-errors: always
