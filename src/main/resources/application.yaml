@@ -14,3 +14,6 @@ spring:
     error:
       include-message: always
       include-binding-errors: always
+
+jwt:
+  active: local
