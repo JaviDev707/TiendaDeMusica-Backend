@@ -1,7 +1,8 @@
 package com.proyectos.tiendaDeMusica.Entity;
 
-import java.time.Instant;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.proyectos.tiendaDeMusica.Enums.EstadoPedido;
 
@@ -36,15 +37,15 @@ public class Pedido {
     private Usuario usuario;
 
     @Column(name = "fecha_creacion", nullable = false)
-    private Instant fechaCreacion; 
+    private LocalDateTime fechaCreacion; 
 
-    private Double totalBruto; // Antes de impuestos y descuentos
+    private BigDecimal totalBruto; // Antes de impuestos y descuentos
 
     @Enumerated(EnumType.STRING) 
     private EstadoPedido estado; 
 
     // Un pedido tiene muchos detalles
     @OneToMany(mappedBy = "pedido", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
-    private List<DetallesPedido> items;
+    private Set<DetallesPedido> detalles;
 
 }

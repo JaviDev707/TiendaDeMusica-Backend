@@ -2,7 +2,6 @@ package com.proyectos.tiendaDeMusica.Entity;
 
 import java.util.Collection;
 
-import org.apache.catalina.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

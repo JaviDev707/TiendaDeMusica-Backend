@@ -1,5 +1,7 @@
 package com.proyectos.tiendaDeMusica.Entity;
 
+import java.math.BigDecimal;
+
 import com.proyectos.tiendaDeMusica.Enums.TipoProducto;
 
 import jakarta.persistence.Column;
@@ -33,7 +35,7 @@ public class Producto {
     @Column(name = "tipo_producto" , insertable = false, updatable = false)
     private TipoProducto tipoProducto;
 
-    private Double precio;
+    private BigDecimal precio;
     private Integer stock;
     @Column(length = 1000)
     private String descripcion;

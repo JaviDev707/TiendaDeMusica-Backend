@@ -1,5 +1,7 @@
 package com.proyectos.tiendaDeMusica.Entity;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,6 +37,6 @@ public class DetallesPedido {
     private Integer cantidad;
 
     @Column(name = "precio_venta", nullable = false)
-    private Double precioVenta; 
+    private BigDecimal precioVenta; 
 
 }

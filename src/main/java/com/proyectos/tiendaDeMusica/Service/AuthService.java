@@ -6,7 +6,6 @@ import com.proyectos.tiendaDeMusica.DTO.LoginRequestDTO;
 import com.proyectos.tiendaDeMusica.DTO.RegisterRequestDTO;
 import com.proyectos.tiendaDeMusica.Entity.Usuario;
 import com.proyectos.tiendaDeMusica.Enums.Role;
-import com.proyectos.tiendaDeMusica.Repository.UsuarioRepository;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

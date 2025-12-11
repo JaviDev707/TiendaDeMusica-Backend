@@ -1,6 +1,6 @@
 package com.proyectos.tiendaDeMusica.Entity;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +36,6 @@ public class Reseña {
     @Column(length = 2000)
     private String comentario;
 
-    private Instant fecha; // timestamp
+    private LocalDateTime fecha; // timestamp
 
 }
