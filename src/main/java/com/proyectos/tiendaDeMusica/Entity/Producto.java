@@ -35,6 +35,7 @@ public class Producto {
     @Column(name = "tipo_producto" , insertable = false, updatable = false)
     private TipoProducto tipoProducto;
 
+    private String nombre;
     private BigDecimal precio;
     private Integer stock;
     @Column(length = 1000)

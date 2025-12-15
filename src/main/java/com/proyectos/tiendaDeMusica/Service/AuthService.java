@@ -9,6 +9,7 @@ import com.proyectos.tiendaDeMusica.Enums.Role;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserService userService; 
-    private final PasswordEncoder passwordEncoder; 
-    private final AuthenticationManager authenticationManager; 
-    private final JwtUtil jwtUtil; 
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     public AuthResponse registrar(RegisterRequestDTO nuevoUsuario) {
@@ -39,7 +40,7 @@ public class AuthService {
         usuario.setLocalidad(nuevoUsuario.localidad());
         usuario.setDireccion(nuevoUsuario.direccion());
         usuario.setRole(Role.USER);
-        
+
         usuario = userService.guardarUsuario(usuario);
 
         String token = jwtUtil.generateToken(usuario);
@@ -48,14 +49,27 @@ public class AuthService {
 
     @Transactional
     public AuthResponse login(LoginRequestDTO request) {
-        
+
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.email(), request.password())
-        );
-        
+                new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+
         Usuario usuario = userService.buscarPorEmail(request.email());
 
         String token = jwtUtil.generateToken(usuario);
         return new AuthResponse(token);
+    }
+
+    public AuthResponse validarYRefrescarToken(String token) {
+
+        if (!jwtUtil.validateToken(token)) {
+            throw new SecurityException("Token inválido o expirado.");
+        }
+
+        String username = jwtUtil.extractUsername(token);
+        UserDetails userDetails = userService.loadUserByUsername(username);
+
+        // Nuevo token
+        String newToken = jwtUtil.generateToken(userDetails);
+        return new AuthResponse(newToken);
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.proyectos.tiendaDeMusica.DTO.ProductoDTO;
 import com.proyectos.tiendaDeMusica.Entity.Producto;
 import com.proyectos.tiendaDeMusica.Repository.ProductoRepository;
 
@@ -51,20 +52,28 @@ public class ProductoService {
         productoRepository.deleteById(id);
     }
 
-    // USAR DTO 
     @Transactional
-    public Producto crearProducto(Producto producto) {
-        return productoRepository.save(producto);
+    public Producto crearProducto(ProductoDTO productoRequest) {
+        return productoRepository.save(mapProducto(productoRequest));
     }
     
-    // USAR DTO 
     @Transactional
-    public Producto actualizarProducto(Producto producto) {
-        if (!productoRepository.existsById(producto.getId())) {
+    public Producto actualizarProducto(ProductoDTO productoDTO) {
+        if (!productoRepository.existsById(productoDTO.id())) {
             throw new IllegalArgumentException("Producto a actualizar no encontrado con ID: " +
-                    producto.getId());
+                    productoDTO.id());
         }
-        return productoRepository.save(producto);
+        return productoRepository.save(mapProducto(productoDTO));
+    }
+
+    private Producto mapProducto(ProductoDTO productoDTO) {
+        Producto producto = new Producto();
+        producto.setNombre(productoDTO.nombre());
+        producto.setPrecio(productoDTO.precio());
+        producto.setStock(productoDTO.stock());
+        producto.setDescripcion(productoDTO.descripcion());
+        producto.setTipoProducto(productoDTO.tipoProducto());
+        return producto;
     }
 
 }

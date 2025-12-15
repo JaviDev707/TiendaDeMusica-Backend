@@ -85,9 +85,15 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public Pedido obtenerDetallePedido(Long pedidoId) {
-        return pedidoRepository.findById(pedidoId)
-                .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado con ID: " + pedidoId));
+    public Pedido obtenerDetallePedido(Long pedidoId, Long usuarioId) {
+        
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado."));
+
+        if (!pedido.getUsuario().getId().equals(usuarioId)) {
+            throw new IllegalArgumentException("No tienes permiso para ver este pedido.");
+        }
+        return pedido;
     }
 
 }
