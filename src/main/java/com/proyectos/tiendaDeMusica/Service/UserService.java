@@ -1,6 +1,7 @@
 package com.proyectos.tiendaDeMusica.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,6 +46,12 @@ public class UserService implements UserDetailsService {
     public Usuario buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario con email " + email + " no encontrado."));
+    }
+
+    //Para el registro
+    @Transactional(readOnly = true)
+    public Optional<Usuario> buscarPorEmailOPT(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 
     @Transactional(readOnly = true)

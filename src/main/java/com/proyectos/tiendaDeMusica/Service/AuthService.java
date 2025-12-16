@@ -27,7 +27,7 @@ public class AuthService {
     @Transactional
     public AuthResponse registrar(RegisterRequestDTO nuevoUsuario) {
 
-        if (userService.buscarPorEmail(nuevoUsuario.email()) != null) {
+        if (userService.buscarPorEmailOPT(nuevoUsuario.email()).isPresent()) {
             throw new RuntimeException("El email ya esta en uso.");
         }
 
