@@ -30,4 +30,43 @@ El proyecto utiliza la estrategia `InheritanceType.JOINED`. Esto significa que l
 3.  **Instrumento:** Marca, modelo, tipo.
 4.  **Varios:** Marca, tipo.
 
+## 🔌 Guía de API (Endpoints)
+
+> 🔐 **Seguridad:** Los endpoints marcados como `USER` o `ADMIN` requieren un token válido en el encabezado de la petición:  
+> `Authorization: Bearer <tu_token_aquí>`
+
+### 🛡️ Autenticación y Usuarios
+| Método | Endpoint | Acceso | Función |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Público | Registra un nuevo usuario en el sistema y le devuelve un J. |
+| `POST` | `/api/auth/login` | Público | Valida credenciales y devuelve el token JWT. |
+
+### 📦 Gestión de Productos (Polimorfismo)
+Este módulo utiliza **Jackson Polymorphic Deserialization**. Al enviar un `POST` o `PUT`, es obligatorio incluir el campo `"tipoProducto"`.
+
+| Método | Endpoint | Acceso | Función |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/productos` | Público | Lista todos los productos (Discos, Instrumentos y Varios). |
+| `GET` | `/api/productos/id/{id}` | Público | Obtiene el detalle completo de un producto por su ID. |
+| `POST` | `/api/productos/crear` | **ADMIN** | Crea un nuevo producto según su tipo específico. |
+| `PUT` | `/api/productos/actualizar` | **ADMIN** | Actualiza un producto existente (requiere ID en el JSON). |
+| `DELETE` | `/api/productos/eliminar/{id}` | **ADMIN** | Elimina un producto de la base de datos. |
+
+### 🛒 Carrito de Compras
+| Método | Endpoint | Acceso | Función |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/carrito` | **USER** | Muestra el carrito actual del usuario autenticado. |
+| `POST` | `/api/carrito/agregar` | **USER** | Añade un producto al carrito (JSON: `productoId`, `cantidad`). |
+| `POST` | `/api/carrito/actualizarcantidad` | **USER** | Modifica la cantidad de uno de los items del carrito. |
+| `DELETE` | `/api/carrito/eliminaritem/{id}` | **USER** | Quita un ítem del carrito. |
+
+### 💳 Pedidos (Checkout)
+| Método | Endpoint | Acceso | Función |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/pedidos/checkout` | **USER** | Convierte el carrito en un pedido y descuenta stock. |
+| `GET` | `/api/pedidos/historial` | **USER** | Lista el historial de compras del usuario logueado. |
+| `GET` | `/api/pedidos/detalle/{pedidoId}` | **USER** | Muestra los detalles de un pedido. |
+
+---
+
 ## Desarrollado por JaviDev707
