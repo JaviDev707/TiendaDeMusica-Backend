@@ -18,7 +18,7 @@ El proyecto está construido con una arquitectura de **Herencia de Tabla Unida (
 * **Spring Boot 3.x** (Spring Security, Spring Data JPA, Spring Web)
 * **JSON Polimórfico** (Jackson Annotations)
 * **Lombok**
-* **H2 Database** (o MySQL/PostgreSQL)
+* **MySQL** 
 * **JWT** (JSON Web Tokens) para autenticación segura.
 
 ## 📊 Arquitectura de Datos (Herencia)
