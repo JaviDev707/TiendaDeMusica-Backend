@@ -29,7 +29,7 @@ public class CarritoController {
     private final CarritoService carritoService;  
     private final UserService userService;  
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<Carrito> obtenerCarrito(Principal principal) {
         Long usuarioId = userService.buscarPorEmail(principal.getName()).getId();
         return ResponseEntity.ok(carritoService.obtenerCarrito(usuarioId));

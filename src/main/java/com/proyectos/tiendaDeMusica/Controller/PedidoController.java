@@ -18,7 +18,7 @@ import com.proyectos.tiendaDeMusica.Service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/pedido")
+@RequestMapping("/api/pedidos")
 @RequiredArgsConstructor
 public class PedidoController {
     

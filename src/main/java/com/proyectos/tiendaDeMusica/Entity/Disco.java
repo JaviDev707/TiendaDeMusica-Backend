@@ -17,7 +17,6 @@ public class Disco extends Producto {
     
     private String genero; 
     private String artista;
-    private String nombre;
     private Integer year;
     
 }

@@ -20,7 +20,7 @@ import com.proyectos.tiendaDeMusica.Service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/reseña")
+@RequestMapping("/api/reseñas")
 @RequiredArgsConstructor
 public class ReseñaController {
     

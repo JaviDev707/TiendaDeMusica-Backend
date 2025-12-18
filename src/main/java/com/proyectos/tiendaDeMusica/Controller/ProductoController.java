@@ -22,28 +22,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/api/producto")
+@RequestMapping("/api/productos")
 @RequiredArgsConstructor
 public class ProductoController {
     
     private final ProductoService productoService;
     
+    @PostMapping("/crear")
+    public ResponseEntity<Producto> crearProducto(@RequestBody ProductoDTO productoDTO) {
+        Producto nuevoProducto = productoService.crearProducto(productoDTO);
+        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
+    }
+
     @GetMapping("/todos")
     public ResponseEntity<List<Producto>> listarTodosLosProductos() {
         List<Producto> productos = productoService.listarTodosLosProductos();
         return ResponseEntity.ok(productos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Producto> obtenerProducto(@PathVariable Long id) {
         Producto producto = productoService.obtenerProducto(id);
         return ResponseEntity.ok(producto);
-    }
-
-    @PostMapping("/crear")
-    public ResponseEntity<Producto> crearProducto(@RequestBody ProductoDTO productoDTO) {
-        Producto nuevoProducto = productoService.crearProducto(productoDTO);
-        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
     }
 
     @PutMapping("/actualizar")

@@ -16,7 +16,6 @@ import lombok.EqualsAndHashCode;
 public class Varios extends Producto {
     
     private String tipo; 
-    private String nombre;
     private String marca;
     
 }
