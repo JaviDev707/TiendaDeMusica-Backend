@@ -1,4 +1,4 @@
-# 🎸 E-Commerce: Tienda de Música 
+# 🎸 E-Commerce: Tienda de Música (En desarrollo)
 
 Este es el backend de una tienda online especializada en música, donde gestionamos instrumentos, discos y otros.
 
