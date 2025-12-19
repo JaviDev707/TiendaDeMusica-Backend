@@ -2,6 +2,8 @@ package com.proyectos.tiendaDeMusica.Entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,12 +13,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "detalles_pedido")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class DetallesPedido {
     
@@ -27,6 +31,7 @@ public class DetallesPedido {
     // Muchos detalles pertenecen a Un pedido
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido", nullable = false)
+    @JsonBackReference
     private Pedido pedido;
 
     // Muchos detalles apuntan a Un producto

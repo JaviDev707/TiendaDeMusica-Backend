@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.proyectos.tiendaDeMusica.Enums.EstadoPedido;
 
 import jakarta.persistence.Column;
@@ -46,6 +47,7 @@ public class Pedido {
 
     // Un pedido tiene muchos detalles
     @OneToMany(mappedBy = "pedido", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<DetallesPedido> detalles;
 
 }
