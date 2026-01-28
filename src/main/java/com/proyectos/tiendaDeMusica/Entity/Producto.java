@@ -38,6 +38,7 @@ public class Producto {
     private String nombre;
     private BigDecimal precio;
     private Integer stock;
+    private String imageUrl;
     @Column(length = 1000)
     private String descripcion;
 

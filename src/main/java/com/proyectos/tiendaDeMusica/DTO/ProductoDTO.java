@@ -22,6 +22,7 @@ public abstract class ProductoDTO {
     private String nombre;
     private BigDecimal precio;
     private int stock;
+    private String imageUrl;
     private String descripcion;
     // Tipo producto se maneja mediante JsonTypeInfo y JsonSubTypes
 }

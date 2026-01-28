@@ -58,4 +58,9 @@ public class ProductoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/crearlista")
+    public ResponseEntity<List<Producto>> crearListaDeProductos(@RequestBody List<ProductoDTO> productosDTO) {
+        List<Producto> nuevosProductos = productoService.crearListaDeProductos(productosDTO);
+        return new ResponseEntity<>(nuevosProductos, HttpStatus.CREATED);
+    }
 }

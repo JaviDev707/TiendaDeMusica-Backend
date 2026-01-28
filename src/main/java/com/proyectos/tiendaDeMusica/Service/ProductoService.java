@@ -120,6 +120,15 @@ public class ProductoService {
             throw new IllegalArgumentException("Tipo de producto no soportado para la actualización.");
         }
     }
+    /**
+     * Crea una lista de productos en la base de datos.
+     */
+    @Transactional
+    public List<Producto> crearListaDeProductos(List<ProductoDTO> productosRequest) {
+        return productosRequest.stream()
+                .map(this::crearProducto)
+                .toList();
+    }
     /*
      * Metodos auxiliares para mapear campos comunes y específicos de cada tipo de producto.
      */

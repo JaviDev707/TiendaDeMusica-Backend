@@ -66,12 +66,12 @@ public class CarritoService {
     }
 
     @Transactional
-    public Carrito quitarItem(Long usuarioId, Long itemId) {
+    public Carrito quitarItem(Long usuarioId, Long productoId) {
         Carrito carrito = obtenerCarrito(usuarioId);
 
         // Busco el ItemCarrito por id
         ItemCarrito itemARemover = carrito.getItems().stream()
-                .filter(item -> item.getId().equals(itemId))
+                .filter(item -> item.getProducto().getId().equals(productoId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Ítem no encontrado en el carrito."));
 
@@ -81,7 +81,7 @@ public class CarritoService {
     }
 
     @Transactional
-    public Carrito actualizarCantidad(Long usuarioId, Long itemId, int nuevaCantidad) {
+    public Carrito actualizarCantidad(Long usuarioId, Long productoId, int nuevaCantidad) {
 
         if (nuevaCantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
@@ -90,7 +90,7 @@ public class CarritoService {
         Carrito carrito = obtenerCarrito(usuarioId);
 
         ItemCarrito itemAActualizar = carrito.getItems().stream()
-                .filter(item -> item.getId().equals(itemId))
+                .filter(item -> item.getProducto().getId().equals(productoId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Ítem no encontrado en el carrito."));
 
