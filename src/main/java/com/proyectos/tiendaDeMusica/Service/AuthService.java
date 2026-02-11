@@ -6,7 +6,9 @@ import com.proyectos.tiendaDeMusica.DTO.LoginRequestDTO;
 import com.proyectos.tiendaDeMusica.DTO.RegisterRequestDTO;
 import com.proyectos.tiendaDeMusica.Entity.Usuario;
 import com.proyectos.tiendaDeMusica.Enums.Role;
+import com.proyectos.tiendaDeMusica.Exception.ApiException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +30,7 @@ public class AuthService {
     public AuthResponse registrar(RegisterRequestDTO nuevoUsuario) {
 
         if (userService.buscarPorEmailOPT(nuevoUsuario.email()).isPresent()) {
-            throw new RuntimeException("El email ya esta en uso.");
+            throw new ApiException("El email ya esta en uso.", HttpStatus.CONFLICT);
         }
 
         Usuario usuario = new Usuario();
@@ -62,7 +64,7 @@ public class AuthService {
     public AuthResponse validarYRefrescarToken(String token) {
 
         if (!jwtUtil.validateToken(token)) {
-            throw new SecurityException("Token inválido o expirado.");
+            throw new ApiException("Token inválido o expirado.", HttpStatus.UNAUTHORIZED);
         }
 
         String username = jwtUtil.extractUsername(token);

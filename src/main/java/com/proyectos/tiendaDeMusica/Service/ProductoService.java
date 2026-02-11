@@ -2,6 +2,7 @@ package com.proyectos.tiendaDeMusica.Service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import com.proyectos.tiendaDeMusica.Entity.Disco;
 import com.proyectos.tiendaDeMusica.Entity.Instrumento;
 import com.proyectos.tiendaDeMusica.Entity.Producto;
 import com.proyectos.tiendaDeMusica.Entity.Varios;
+import com.proyectos.tiendaDeMusica.Exception.ApiException;
 import com.proyectos.tiendaDeMusica.Repository.ProductoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,7 @@ public class ProductoService {
     @Transactional(readOnly = true)
     public Producto obtenerProducto(Long id) {
         return productoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + id));
+                .orElseThrow(() -> new ApiException("Producto no encontrado con ID: " + id, HttpStatus.NOT_FOUND));
     }
     /**
      * Actualiza el stock de un producto después de una venta.
@@ -40,10 +42,10 @@ public class ProductoService {
     public Producto actualizarStock(Long id, int cantidadVendida) {
 
         Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + id));
+                .orElseThrow(() -> new ApiException("Producto no encontrado con ID: " + id, HttpStatus.NOT_FOUND));
 
         if (producto.getStock() < cantidadVendida) {
-            throw new IllegalArgumentException("Stock insuficiente para el producto con ID: " + id);
+            throw new ApiException("Stock insuficiente para el producto con ID: " + id, HttpStatus.BAD_REQUEST);
         }
 
         int nuevoStock = producto.getStock() - cantidadVendida;
@@ -57,7 +59,7 @@ public class ProductoService {
     @Transactional
     public void eliminarProducto(Long id) {
         if (!productoRepository.existsById(id)) {
-            throw new IllegalArgumentException("Producto a eliminar no encontrado con ID: " + id);
+            throw new ApiException("Producto a eliminar no encontrado con ID: " + id, HttpStatus.NOT_FOUND);
         }
         productoRepository.deleteById(id);
     }
@@ -75,8 +77,8 @@ public class ProductoService {
         } else if (productoRequest instanceof VariosDTO) {
             producto = mapVarios((VariosDTO) productoRequest);
         } else {
-            throw new IllegalArgumentException("Tipo de producto no soportado: " +
-                    productoRequest.getClass().getSimpleName());
+            throw new ApiException("Tipo de producto no soportado: " +
+                    productoRequest.getClass().getSimpleName(), HttpStatus.BAD_REQUEST);
         }
         return productoRepository.save(producto);
     }
@@ -87,37 +89,37 @@ public class ProductoService {
     public Producto actualizarProducto(ProductoDTO productoRequest) {
 
         if (productoRequest.getId() == null) {
-            throw new IllegalArgumentException("El ID del producto es obligatorio para la actualización.");
+            throw new ApiException("El ID del producto es obligatorio para la actualización.", HttpStatus.BAD_REQUEST);
         }
 
         Producto productoExistente = productoRepository.findById(productoRequest.getId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Producto no encontrado con ID: " + productoRequest.getId()));
+                .orElseThrow(() -> new ApiException(
+                        "Producto no encontrado con ID: " + productoRequest.getId(), HttpStatus.NOT_FOUND));
 
 
         if (productoRequest instanceof DiscoDTO discoRequest) {
             if (!(productoExistente instanceof Disco)) {
-                throw new IllegalArgumentException("El producto ID " + productoRequest.getId() + " es de tipo "
-                        + productoExistente.getClass().getSimpleName() + " y no DISCO.");
+                throw new ApiException("El producto ID " + productoRequest.getId() + " es de tipo "
+                        + productoExistente.getClass().getSimpleName() + " y no DISCO.", HttpStatus.NOT_FOUND);
             }
             return actualizarDisco((Disco) productoExistente, discoRequest);
 
         } else if (productoRequest instanceof InstrumentoDTO instrumentoRequest) {
             if (!(productoExistente instanceof Instrumento)) {
-                throw new IllegalArgumentException(
-                        "El producto ID " + productoRequest.getId() + " no es de tipo INSTRUMENTO.");
+                throw new ApiException(
+                        "El producto ID " + productoRequest.getId() + " no es de tipo INSTRUMENTO.", HttpStatus.NOT_FOUND);
             }
             return actualizarInstrumento((Instrumento) productoExistente, instrumentoRequest);
 
         } else if (productoRequest instanceof VariosDTO variosRequest) {
             if (!(productoExistente instanceof Varios)) {
-                throw new IllegalArgumentException(
-                        "El producto ID " + productoRequest.getId() + " no es de tipo VARIOS.");
+                throw new ApiException(
+                        "El producto ID " + productoRequest.getId() + " no es de tipo VARIOS.", HttpStatus.NOT_FOUND);
             }
             return actualizarVarios((Varios) productoExistente, variosRequest);
 
         } else {
-            throw new IllegalArgumentException("Tipo de producto no soportado para la actualización.");
+            throw new ApiException("Tipo de producto no soportado para la actualización.", HttpStatus.BAD_REQUEST);
         }
     }
     /**

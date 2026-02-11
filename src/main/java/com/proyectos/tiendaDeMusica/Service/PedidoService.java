@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import com.proyectos.tiendaDeMusica.Entity.Pedido;
 import com.proyectos.tiendaDeMusica.Entity.Producto;
 import com.proyectos.tiendaDeMusica.Entity.Usuario;
 import com.proyectos.tiendaDeMusica.Enums.EstadoPedido;
+import com.proyectos.tiendaDeMusica.Exception.ApiException;
 import com.proyectos.tiendaDeMusica.Repository.PedidoRepository;
 import com.proyectos.tiendaDeMusica.Repository.UsuarioRepository;
 
@@ -36,12 +38,12 @@ public class PedidoService {
         Carrito carrito = carritoService.obtenerCarrito(usuarioId);
 
         if (carrito.getItems().isEmpty()) {
-            throw new IllegalArgumentException("El carrito está vacío. No se puede realizar el checkout.");
+            throw new ApiException("El carrito está vacío. No se puede realizar el checkout.", HttpStatus.BAD_REQUEST);
         }
 
         Pedido nuevoPedido = new Pedido();
         Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+                .orElseThrow(() -> new ApiException("Usuario no encontrado.", HttpStatus.NOT_FOUND));
 
         nuevoPedido.setUsuario(usuario);
         nuevoPedido.setFechaCreacion(LocalDateTime.now());
@@ -88,10 +90,10 @@ public class PedidoService {
     public Pedido obtenerDetallePedido(Long pedidoId, Long usuarioId) {
         
         Pedido pedido = pedidoRepository.findById(pedidoId)
-                .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado."));
+                .orElseThrow(() -> new ApiException("Pedido no encontrado.", HttpStatus.NOT_FOUND));
 
         if (!pedido.getUsuario().getId().equals(usuarioId)) {
-            throw new IllegalArgumentException("No tienes permiso para ver este pedido.");
+            throw new ApiException("No tienes permiso para ver este pedido.", HttpStatus.UNAUTHORIZED);
         }
         return pedido;
     }

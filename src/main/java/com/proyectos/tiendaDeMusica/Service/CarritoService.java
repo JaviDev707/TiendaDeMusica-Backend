@@ -2,12 +2,14 @@ package com.proyectos.tiendaDeMusica.Service;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.proyectos.tiendaDeMusica.Entity.Carrito;
 import com.proyectos.tiendaDeMusica.Entity.ItemCarrito;
 import com.proyectos.tiendaDeMusica.Entity.Producto;
+import com.proyectos.tiendaDeMusica.Exception.ApiException;
 import com.proyectos.tiendaDeMusica.Repository.CarritoRepository;
 import com.proyectos.tiendaDeMusica.Repository.UsuarioRepository;
 
@@ -26,18 +28,18 @@ public class CarritoService {
         if (carritoRepository.findByUsuarioId(usuarioId).isEmpty()) {
             Carrito nuevoCarrito = new Carrito();
             nuevoCarrito.setUsuario(usuarioRepository.findById(usuarioId)
-                    .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + usuarioId)));
+                    .orElseThrow(() -> new ApiException("Usuario no encontrado con ID: " + usuarioId, HttpStatus.NOT_FOUND)));
             return carritoRepository.save(nuevoCarrito);
         }
         return carritoRepository.findByUsuarioId(usuarioId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Carrito no encontrado para el usuario con ID: " + usuarioId));
+                .orElseThrow(() -> new ApiException(
+                        "Carrito no encontrado para el usuario con ID: " + usuarioId, HttpStatus.NOT_FOUND));
     }
 
     @Transactional
     public Carrito agregarItem(Long usuarioId, Long productoId, int cantidad) {
         if (cantidad <= 0) {
-            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+            throw new ApiException("La cantidad debe ser mayor que cero.", HttpStatus.BAD_REQUEST);
         }
 
         Carrito carrito = obtenerCarrito(usuarioId);
@@ -73,7 +75,7 @@ public class CarritoService {
         ItemCarrito itemARemover = carrito.getItems().stream()
                 .filter(item -> item.getProducto().getId().equals(productoId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Ítem no encontrado en el carrito."));
+                .orElseThrow(() -> new ApiException("Ítem no encontrado en el carrito.", HttpStatus.NOT_FOUND));
 
         carrito.getItems().remove(itemARemover);
 
@@ -84,7 +86,7 @@ public class CarritoService {
     public Carrito actualizarCantidad(Long usuarioId, Long productoId, int nuevaCantidad) {
 
         if (nuevaCantidad <= 0) {
-            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+            throw new ApiException("La cantidad debe ser mayor que cero.", HttpStatus.BAD_REQUEST);
         }
 
         Carrito carrito = obtenerCarrito(usuarioId);
@@ -92,7 +94,7 @@ public class CarritoService {
         ItemCarrito itemAActualizar = carrito.getItems().stream()
                 .filter(item -> item.getProducto().getId().equals(productoId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Ítem no encontrado en el carrito."));
+                .orElseThrow(() -> new ApiException("Ítem no encontrado en el carrito.", HttpStatus.NOT_FOUND));
 
         itemAActualizar.setCantidad(nuevaCantidad);
 
@@ -103,7 +105,7 @@ public class CarritoService {
     public void eliminarCarrito(Long carritoId) {
 
         if (!carritoRepository.existsById(carritoId)) {
-            throw new IllegalArgumentException("Carrito no encontrado con ID: " + carritoId);
+            throw new ApiException("Carrito no encontrado con ID: " + carritoId, HttpStatus.NOT_FOUND);
         }
 
         carritoRepository.deleteById(carritoId);
