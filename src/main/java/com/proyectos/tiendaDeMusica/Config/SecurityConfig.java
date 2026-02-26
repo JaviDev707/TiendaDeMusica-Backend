@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 //import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -39,7 +40,12 @@ public class SecurityConfig {
                 .cors(cors -> {
                 }) // config de CORS
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Rutas publicas
+                        .requestMatchers("/api/auth/**", "/api/productos/todos").permitAll() // endpoints de auth sin auth
+                        // endpoints del ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("ADMIN")
+                        .anyRequest().authenticated() // resto requiere auth
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // solo tokens
